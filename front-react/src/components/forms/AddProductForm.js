@@ -14,9 +14,31 @@ const AddProductForm = () => {
       quantity: Yup.number().required('Quantidade é obrigatória').min(1),
       price: Yup.number().required('Preço é obrigatório').min(0),
     }),
-    onSubmit: (values, { resetForm }) => {
-      addProduct(values);
-      resetForm();
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        // Fazendo a requisição POST para o backend Django
+        const response = await fetch('http://localhost:8000/api/produtos/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao adicionar produto');
+        }
+
+        const data = await response.json();
+        
+        // Atualize o contexto com o novo produto
+        addProduct(data);
+
+        // Reseta o formulário após o envio
+        resetForm();
+      } catch (error) {
+        console.error('Erro:', error);
+      }
     },
   });
 

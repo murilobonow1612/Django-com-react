@@ -6,5 +6,6 @@ router = DefaultRouter()
 router.register(r'produtos', ProdutoViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    #url usada no get do productList.js e no post do addproductform.js
+    path('api/produtos/', include(router.urls)),
 ]
